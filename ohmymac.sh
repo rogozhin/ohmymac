@@ -208,6 +208,7 @@ doMacPreferences(){
     -c "Delete :AppleSymbolicHotKeys:64" \
     -c "Delete :AppleSymbolicHotKeys:65" \
     2>/dev/null
+  /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
 
   echo "Shortcuts: Select the previous input source (cmd + space)"
   /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
@@ -216,7 +217,7 @@ doMacPreferences(){
     -c "Add :AppleSymbolicHotKeys:60:value:parameters: integer 32" \
     -c "Add :AppleSymbolicHotKeys:60:value:parameters: integer 49" \
     -c "Add :AppleSymbolicHotKeys:60:value:parameters: integer 1048576" \
-    -c "Add :AppleSymbolicHotKeys:60:type string standard"
+    -c "Add :AppleSymbolicHotKeys:60:value:type string standard"
 
   echo "Shortcuts: Select next source in input menu (cmd + opt + space)"
   /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
@@ -225,7 +226,7 @@ doMacPreferences(){
     -c "Add :AppleSymbolicHotKeys:61:value:parameters: integer 32" \
     -c "Add :AppleSymbolicHotKeys:61:value:parameters: integer 49" \
     -c "Add :AppleSymbolicHotKeys:61:value:parameters: integer 1572864" \
-    -c "Add :AppleSymbolicHotKeys:61:type string standard"
+    -c "Add :AppleSymbolicHotKeys:61:value:type string standard"
 
   echo "Shortcuts: Show Spotlight search (ctrl + space)"
   /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
@@ -234,7 +235,7 @@ doMacPreferences(){
     -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 65535" \
     -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 49" \
     -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 262144" \
-    -c "Add :AppleSymbolicHotKeys:64:type string standard"
+    -c "Add :AppleSymbolicHotKeys:64:value:type string standard"
 
   echo "Shortcuts: Show Finer search window (ctrl + opt + space) (disable)"
   /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
@@ -243,7 +244,9 @@ doMacPreferences(){
     -c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 65535" \
     -c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 49" \
     -c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 786432" \
-    -c "Add :AppleSymbolicHotKeys:65:type string standard"
+    -c "Add :AppleSymbolicHotKeys:65:value:type string standard"
+
+  /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
 
   echo "======"
   echo "Finder"
