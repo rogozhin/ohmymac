@@ -10,6 +10,8 @@ DO_DEV_APPS=1
 DO_APPS=1
 
 OS="$(uname)"
+HAS_SUDO_RIGHTS=1
+NEED_SUDO=0
 
 unsetActions(){
 	DO_MACOS_PREFS=0
@@ -117,12 +119,20 @@ doInitiatory(){
 		exit 1
 	fi
 
+	if [ -z "$(groups | grep admin)" ]
+	then
+		HAS_SUDO_RIGHTS=0
+	fi
+
 	# Close any open System Preferences panes, to prevent them from overriding settings
 	osascript -e 'tell application "System Preferences" to quit'
 
-	# Ask password and prevent to ask again
-	sudo -v
-	while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+	if [ $HAS_SUDO_RIGHTS -eq 1 ] && [ $NEED_SUDO -eq 1 ]
+	then
+		# Ask password and prevent to ask again
+		sudo -v
+		while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+	fi
 }
 doFinish(){
 	# TODO print instructions for manual actions
@@ -133,7 +143,7 @@ doFinish(){
 	echo "press any key to reboot"
 	read -rsn1
 
-	sudo shutdown -r now
+	osascript -e 'tell application "System Events" to shut down'
 }
 
 doMacPreferences(){
@@ -145,7 +155,7 @@ doMacPreferences(){
 	echo "====="
 
 	echo "Require password immediately after sleep or screen saver begins"
-	sudo osascript -e 'tell application "System Events" to set require password to wake of security preferences to true'
+	osascript -e 'tell application "System Events" to set require password to wake of security preferences to true'
 
 
 	echo "========"
