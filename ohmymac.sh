@@ -143,7 +143,7 @@ doFinish(){
 	echo "press any key to reboot"
 	read -rsn1
 
-	osascript -e 'tell application "System Events" to shut down'
+	osascript -e 'tell application "System Events" to restart'
 }
 
 doMacPreferences(){
