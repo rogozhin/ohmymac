@@ -178,7 +178,7 @@ doMacPreferences(){
 	defaults write com.apple.HIToolbox AppleFnUsageType -int 0
 
 	echo "Automatically switch to document's input source"
-	/usr/libexec/PlistBuddy -c "Set :AppleGlobalTextInputProperties:TextInputGlobalPropertyPerContextInput true" ~/Library/Preferences/com.apple.HIToolbox.plist
+	defaults write com.apple.HIToolbox AppleGlobalTextInputProperties -dict TextInputGlobalPropertyPerContextInput 1
 
 	echo "Disable automatic capitalization"
 	defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
