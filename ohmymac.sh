@@ -203,47 +203,47 @@ doMacPreferences(){
   # If you want to change shortcuts read https://krypted.com/mac-os-x/defaults-symbolichotkeys/ and https://apple.stackexchange.com/questions/91679/is-there-a-way-to-set-an-application-shortcut-in-the-keyboard-preference-pane-vi
 
   /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
-    -c "Delete :AppleSymbolicHotKeys:660" \
-    -c "Delete :AppleSymbolicHotKeys:661" \
-    -c "Delete :AppleSymbolicHotKeys:664" \
-    -c "Delete :AppleSymbolicHotKeys:665" \
+    -c "Delete :AppleSymbolicHotKeys:60" \
+    -c "Delete :AppleSymbolicHotKeys:61" \
+    -c "Delete :AppleSymbolicHotKeys:64" \
+    -c "Delete :AppleSymbolicHotKeys:65" \
     2>/dev/null
 
   echo "Shortcuts: Select the previous input source (cmd + space)"
   /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
-    -c "Add :AppleSymbolicHotKeys:660:enabled bool true" \
-    -c "Add :AppleSymbolicHotKeys:660:value:parameters array" \
-    -c "Add :AppleSymbolicHotKeys:660:value:parameters: integer 32" \
-    -c "Add :AppleSymbolicHotKeys:660:value:parameters: integer 49" \
-    -c "Add :AppleSymbolicHotKeys:660:value:parameters: integer 1048576" \
-    -c "Add :AppleSymbolicHotKeys:660:type string standard"
+    -c "Add :AppleSymbolicHotKeys:60:enabled bool true" \
+    -c "Add :AppleSymbolicHotKeys:60:value:parameters array" \
+    -c "Add :AppleSymbolicHotKeys:60:value:parameters: integer 32" \
+    -c "Add :AppleSymbolicHotKeys:60:value:parameters: integer 49" \
+    -c "Add :AppleSymbolicHotKeys:60:value:parameters: integer 1048576" \
+    -c "Add :AppleSymbolicHotKeys:60:type string standard"
 
   echo "Shortcuts: Select next source in input menu (cmd + opt + space)"
   /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
-    -c "Add :AppleSymbolicHotKeys:661:enabled bool true" \
-    -c "Add :AppleSymbolicHotKeys:661:value:parameters array" \
-    -c "Add :AppleSymbolicHotKeys:661:value:parameters: integer 32" \
-    -c "Add :AppleSymbolicHotKeys:661:value:parameters: integer 49" \
-    -c "Add :AppleSymbolicHotKeys:661:value:parameters: integer 1572864" \
-    -c "Add :AppleSymbolicHotKeys:661:type string standard"
+    -c "Add :AppleSymbolicHotKeys:61:enabled bool true" \
+    -c "Add :AppleSymbolicHotKeys:61:value:parameters array" \
+    -c "Add :AppleSymbolicHotKeys:61:value:parameters: integer 32" \
+    -c "Add :AppleSymbolicHotKeys:61:value:parameters: integer 49" \
+    -c "Add :AppleSymbolicHotKeys:61:value:parameters: integer 1572864" \
+    -c "Add :AppleSymbolicHotKeys:61:type string standard"
 
   echo "Shortcuts: Show Spotlight search (ctrl + space)"
   /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
-    -c "Add :AppleSymbolicHotKeys:664:enabled bool true" \
-    -c "Add :AppleSymbolicHotKeys:664:value:parameters array" \
-    -c "Add :AppleSymbolicHotKeys:664:value:parameters: integer 65535" \
-    -c "Add :AppleSymbolicHotKeys:664:value:parameters: integer 49" \
-    -c "Add :AppleSymbolicHotKeys:664:value:parameters: integer 262144" \
-    -c "Add :AppleSymbolicHotKeys:664:type string standard"
+    -c "Add :AppleSymbolicHotKeys:64:enabled bool true" \
+    -c "Add :AppleSymbolicHotKeys:64:value:parameters array" \
+    -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 65535" \
+    -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 49" \
+    -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 262144" \
+    -c "Add :AppleSymbolicHotKeys:64:type string standard"
 
   echo "Shortcuts: Show Finer search window (ctrl + opt + space) (disable)"
   /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
-    -c "Add :AppleSymbolicHotKeys:665:enabled bool true" \
-    -c "Add :AppleSymbolicHotKeys:665:value:parameters array" \
-    -c "Add :AppleSymbolicHotKeys:665:value:parameters: integer 65535" \
-    -c "Add :AppleSymbolicHotKeys:665:value:parameters: integer 49" \
-    -c "Add :AppleSymbolicHotKeys:665:value:parameters: integer 786432" \
-    -c "Add :AppleSymbolicHotKeys:665:type string standard"
+    -c "Add :AppleSymbolicHotKeys:65:enabled bool false" \
+    -c "Add :AppleSymbolicHotKeys:65:value:parameters array" \
+    -c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 65535" \
+    -c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 49" \
+    -c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 786432" \
+    -c "Add :AppleSymbolicHotKeys:65:type string standard"
 
   echo "======"
   echo "Finder"
