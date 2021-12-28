@@ -1,0 +1,19 @@
+# git
+alias gs='git status'
+alias ga='git add '
+alias gp='git push ' # todo: push new branch
+alias gc='git commit '
+alias gca='git commit -am '
+alias gco='git checkout '
+function gnew() {
+    git checkout main
+    git pull
+    git checkout -b $1
+}
+function gmerge() {
+    local CURR_BR=`git rev-parse --abbrev-ref HEAD`
+    git checkout main
+    git pull
+    git checkout $CURR_BR
+    git merge main
+}

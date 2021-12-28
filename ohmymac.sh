@@ -8,6 +8,7 @@ txtrst=$(tput sgr0)
 DO_MACOS_PREFS=1
 DO_DEV_APPS=1
 DO_APPS=1
+DO_ALL=1
 
 OS="$(uname)"
 HAS_SUDO_RIGHTS=1
@@ -17,6 +18,7 @@ unsetActions(){
   DO_MACOS_PREFS=0
   DO_DEV_APPS=0
   DO_APPS=0
+  DO_ALL=0
 }
 
 usage(){
@@ -79,12 +81,15 @@ getOpts(){
 
   		--skip-macos-prefs)
   			DO_MACOS_PREFS=0
+        DO_ALL=0
   			;;
   		--skip-dev-apps)
   			DO_DEV_APPS=0
+        DO_ALL=0
   			;;
   		--skip-apps)
   			DO_APPS=0
+        DO_ALL=0
   			;;
 
   		*)
@@ -200,7 +205,7 @@ doMacPreferences(){
   defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
   echo "Shortcuts"
-  # If you want to change shortcuts read https://krypted.com/mac-os-x/defaults-symbolichotkeys/ and https://apple.stackexchange.com/questions/91679/is-there-a-way-to-set-an-application-shortcut-in-the-keyboard-preference-pane-vi
+  # more information at docs/macos-shortcuts.md
 
   /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
     -c "Delete :AppleSymbolicHotKeys:60" \
@@ -286,17 +291,30 @@ doMacPreferences(){
   echo "Set the icon magnification"
   defaults write com.apple.dock magnification -int 1
 
-  echo "Don’t automatically rearrange Spaces based on most recent use"
+  echo "Don't automatically rearrange Spaces based on most recent use"
   defaults write com.apple.dock mru-spaces -int 0
 
   echo "Show indicator lights for open applications in the Dock"
   defaults write com.apple.dock show-process-indicators -bool true
 
-  echo "Don’t show recent applications in Dock"
+  echo "Don't show recent applications in Dock"
   defaults write com.apple.dock show-recents -bool false
 
-  echo "Don’t show Dashboard as a Space"
+  echo "Don't show Dashboard as a Space"
   defaults write com.apple.dock dashboard-in-overlay -bool true
+}
+
+doZshInit(){
+  echo "==="
+  echo "zsh"
+  echo "==="
+
+  # init .zshenv
+  echo "export LC_ALL=en_US.UTF-8" > ~/.zshenv
+  echo "export LANG=en_US.UTF-8" >> ~/.zshenv
+
+  # init .zshrc
+  cat ./dotfiles/.zsh-core > ~/.zshrc
 }
 
 echo "${txtgrn}Hello! Let's setup you new Mac!${txtrst}"
@@ -306,6 +324,10 @@ doInitiatory
 # set macos prefs
 if [ $DO_MACOS_PREFS -eq 1 ]; then
   doMacPreferences
+fi
+
+if [ $DO_ALL -eq 1 ]; then
+  doZshInit
 fi
 
 doFinish

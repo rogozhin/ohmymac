@@ -1,0 +1,56 @@
+# iterm integration
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+function iterm2_print_user_vars() {
+    iterm2_set_user_var gitBranch $(get_git_branch)
+    iterm2_set_user_var gitRepo $(get_git_repo)
+    iterm2_set_user_var gitChanged "$(get_git_have_changes)"
+}
+function get_git_branch() {
+  if git rev-parse --git-dir > /dev/null 2>&1; then
+    echo $(git branch 2> /dev/null | grep \* | cut -c3-)
+  else
+    echo ""
+  fi
+}
+function get_git_repo() {
+  if git rev-parse --git-dir > /dev/null 2>&1; then
+    echo $(basename `git rev-parse --show-toplevel`)
+  else
+    echo ""
+  fi
+}
+function get_git_have_changes() {
+  if [ -d .git ] && ! git diff --no-ext-diff --quiet --exit-code 2>/dev/null; then
+    echo " *"
+  else
+    echo ""
+  fi
+}
+function get_git_branch() {
+  if git rev-parse --git-dir > /dev/null 2>&1; then
+    echo $(git branch 2> /dev/null | grep \* | cut -c3-)
+  else
+    echo ""
+  fi
+}
+function get_git_repo() {
+  if git rev-parse --git-dir > /dev/null 2>&1; then
+    echo $(basename `git rev-parse --show-toplevel`)
+  else
+    echo ""
+  fi
+}
+function get_git_have_changes() {
+  if [ -d .git ] && ! git diff --no-ext-diff --quiet --exit-code 2>/dev/null; then
+    echo " *"
+  else
+    echo ""
+  fi
+}
+function setTitle() {
+  local REPO="$(get_git_repo)$(get_git_have_changes)"
+  echo -ne "\033]0;"$REPO"\007"
+}
+add-zsh-hook chpwd setTitle
+add-zsh-hook precmd setTitle
+setTitle
