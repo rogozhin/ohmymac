@@ -13,6 +13,7 @@ DO_ALL=1
 OS="$(uname)"
 HAS_SUDO_RIGHTS=1
 NEED_SUDO=0
+CHIP="$(uname -p)"
 
 unsetActions(){
   DO_MACOS_PREFS=0
@@ -106,6 +107,58 @@ getOpts(){
 
 getOpts $*
 
+installBrew(){
+  if [ -z "$(brew --version 2>/dev/null)" ]
+  then
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  fi
+
+  brew install mas
+
+  if [ $DO_DEV_APPS -eq 1 ]; then
+    brew install mc
+    # TODO install others
+  fi
+}
+
+installApp(){
+  APP_NAME=$1
+  APP_URL=$2
+  TARGET_PATH="/Applications"
+
+  rm -rf ./tmp
+  mkdir -p ./tmp
+
+  echo "Download ${APP_NAME}"
+  wget --directory-prefix="./tmp/" --content-disposition ${APP_URL}
+  FILE_NAME=$(ls ./tmp)
+  FILE_EXT=${FILE_NAME##*.}
+
+  echo "Insatall ${APP_NAME}"
+  if [ "${FILE_EXT}" == "dmg" ]; then
+    VOLUME=$(hdiutil attach -nobrowse "./tmp/${FILE_NAME}" |
+      awk 'END {$1=$2=""; gsub(/^ +| +$/,""); print $0}'; exit ${PIPESTATUS[0]})
+    APP_NAME=$(ls "${VOLUME}" | grep .app)
+    (rsync -a "${VOLUME}/${APP_NAME}" "${TARGET_PATH}"; SYNCED=$?
+      (hdiutil detach -force -quiet "$VOLUME" || exit $?) && exit "$SYNCED")
+  fi
+  if [ "${FILE_EXT}" == "zip" ]; then
+    unzip -qq -d ./tmp "./tmp/${FILE_NAME}"
+    APP_NAME=$(ls ./tmp | grep -E "(\.app|\.pkg)$")
+    APP_EXT=${APP_NAME##*.}
+    echo $APP_NAME
+    ECHO $APP_EXT
+    if [ "${APP_EXT}" == "app" ]; then
+      rsync -a "./tmp/${APP_NAME}" "${TARGET_PATH}"
+    fi
+    if [ "${APP_EXT}" == "pkg" ]; then
+      installer -pkg "./tmp/${APP_NAME}" -target CurrentUserHomeDirectory
+    fi
+  fi
+
+  rm -rf ./tmp
+}
+
 doInitiatory(){
   if [[ "${OS}" != "Darwin" ]]
   then
@@ -150,7 +203,6 @@ doFinish(){
 
   osascript -e 'tell application "System Events" to restart'
 }
-
 doMacPreferences(){
   echo "So, fix some macos preferences"
 
@@ -302,8 +354,9 @@ doMacPreferences(){
 
   echo "Don't show Dashboard as a Space"
   defaults write com.apple.dock dashboard-in-overlay -bool true
-}
 
+  installBrew
+}
 doZshInit(){
   echo "==="
   echo "zsh"
@@ -316,8 +369,70 @@ doZshInit(){
   # init .zshrc
   cat ./dotfiles/.zsh-core > ~/.zshrc
 }
+doDevApps(){
+  # Visual Studio Code
+  APP_URL="https://code.visualstudio.com/sha/download?build=stable&os=darwin"
+  if [ "${CHIP}" == "arm" ]; then
+    APP_URL="https://code.visualstudio.com/sha/download?build=stable&os=darwin-arm64"
+  fi
+  installApp "Visual Studio Code" $APP_URL
 
-echo "${txtgrn}Hello! Let's setup you new Mac!${txtrst}"
+  # TablePlus
+  APP_URL="https://www.tableplus.io/release/osx/tableplus_latest"
+  installApp "TablePlus" $APP_URL
+
+  # Camunda Modeler
+  APP_URL="https://downloads.camunda.cloud/release/camunda-modeler/4.11.1/camunda-modeler-4.11.1-mac.dmg"
+  installApp "Camunda Modeler" $APP_URL
+
+  # iTerm
+  APP_URL="https://iterm2.com/downloads/stable/latest"
+  installApp "iTerm" $APP_URL
+
+  # Postman
+  APP_URL="https://dl.pstmn.io/download/latest/osx_64"
+  if [ "${CHIP}" == "arm" ]; then
+    APP_URL="https://dl.pstmn.io/download/latest/osx_arm64"
+  fi
+  installApp "Postman" $APP_URL
+
+  # Pritunl
+  APP_URL="https://github.com/pritunl/pritunl-client-electron/releases/download/1.2.3019.52/Pritunl.pkg.zip"
+  if [ "${CHIP}" == "arm" ]; then
+    APP_URL="https://github.com/pritunl/pritunl-client-electron/releases/download/1.2.3019.52/Pritunl.arm64.pkg.zip"
+  fi
+  installApp "Pritunl" $APP_URL
+
+  # Sublime Text
+  APP_URL="https://download.sublimetext.com/sublime_text_build_4126_mac.zip"
+  installApp "Sublime Text" $APP_URL
+
+  if [ -n "$(mas version 2>/dev/null)" ]
+  then
+    echo "Install Jira"
+    mas install 1475897096
+  fi
+}
+doApps(){
+  # AirServer
+  APP_URL="https://www.airserver.com/download/mac/latest"
+  installApp "AirServer" $APP_URL
+
+  # Zoom
+  APP_URL="https://zoom.us/client/latest/Zoom.pkg"
+  installApp "Zoom" $APP_URL
+
+  if [ -n "$(mas version 2>/dev/null)" ]
+  then
+    echo "Install Telegram"
+    mas install 747648890
+
+    echo "Install Slack"
+    mas install 803453959
+  fi
+}
+
+echo "${txtgrn}Hello! Let's setup your new Mac!${txtrst}"
 
 doInitiatory
 
@@ -328,6 +443,14 @@ fi
 
 if [ $DO_ALL -eq 1 ]; then
   doZshInit
+fi
+
+if [ $DO_DEV_APPS -eq 1 ]; then
+  doDevApps
+fi
+
+if [ $DO_APPS -eq 1 ]; then
+  doApps
 fi
 
 doFinish
