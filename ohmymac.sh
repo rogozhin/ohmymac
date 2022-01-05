@@ -384,7 +384,7 @@ doZshInit(){
   echo "export PATH=\"/usr/local/bin:$PATH\"" >> ~/.zshenv
   if [ $DO_DEV_APPS -eq 1 ]; then
     echo "export EDITOR=mcedit" >> ~/.zshenv
-  then
+  fi
 
   # init .zshrc
   printAction "Create .zshrc"
@@ -395,7 +395,7 @@ doZshInit(){
     cat ./dotfiles/.zsh-nvm >> ~/.zshrc
 
     cp ./dotfiles/.huskyrc ~/.huskyrc
-  then
+  fi
 }
 doDevApps(){
   title "Developer applications"
