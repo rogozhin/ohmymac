@@ -107,6 +107,12 @@ getOpts(){
 
 getOpts $*
 
+waitForKey(){
+  echo ""
+  echo $1
+  read -rsn1
+}
+
 installBrew(){
   if [ -z "$(brew --version 2>/dev/null)" ]
   then
@@ -117,7 +123,11 @@ installBrew(){
 
   if [ $DO_DEV_APPS -eq 1 ]; then
     brew install mc
-    # TODO install others
+
+    brew install postgres
+    mkdir -p ~/Library/LaunchAgents
+    ln -sfv /usr/local/opt/postgresql/*.plist ~/Library/LaunchAgents
+    launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
   fi
 }
 
@@ -138,21 +148,19 @@ installApp(){
   if [ "${FILE_EXT}" == "dmg" ]; then
     VOLUME=$(hdiutil attach -nobrowse "./tmp/${FILE_NAME}" |
       awk 'END {$1=$2=""; gsub(/^ +| +$/,""); print $0}'; exit ${PIPESTATUS[0]})
-    APP_NAME=$(ls "${VOLUME}" | grep .app)
-    (rsync -a "${VOLUME}/${APP_NAME}" "${TARGET_PATH}"; SYNCED=$?
+    APP_PATH=$(ls "${VOLUME}" | grep .app)
+    (rsync -a "${VOLUME}/${APP_PATH}" "${TARGET_PATH}"; SYNCED=$?
       (hdiutil detach -force -quiet "$VOLUME" || exit $?) && exit "$SYNCED")
   fi
   if [ "${FILE_EXT}" == "zip" ]; then
     unzip -qq -d ./tmp "./tmp/${FILE_NAME}"
-    APP_NAME=$(ls ./tmp | grep -E "(\.app|\.pkg)$")
-    APP_EXT=${APP_NAME##*.}
-    echo $APP_NAME
-    ECHO $APP_EXT
+    APP_PATH=$(ls ./tmp | grep -E "(\.app|\.pkg)$")
+    APP_EXT=${APP_PATH##*.}
     if [ "${APP_EXT}" == "app" ]; then
-      rsync -a "./tmp/${APP_NAME}" "${TARGET_PATH}"
+      rsync -a "./tmp/${APP_PATH}" "${TARGET_PATH}"
     fi
     if [ "${APP_EXT}" == "pkg" ]; then
-      installer -pkg "./tmp/${APP_NAME}" -target CurrentUserHomeDirectory
+      installer -pkg "./tmp/${APP_PATH}" -target CurrentUserHomeDirectory
     fi
   fi
 
@@ -195,12 +203,8 @@ doInitiatory(){
 doFinish(){
   # TODO print instructions for manual actions
   # - safari
-  # - Caffeine.app
 
-  echo ""
-  echo "press any key to reboot"
-  read -rsn1
-
+  waitForKey "press any key to reboot"
   osascript -e 'tell application "System Events" to restart'
 }
 doMacPreferences(){
@@ -365,9 +369,20 @@ doZshInit(){
   # init .zshenv
   echo "export LC_ALL=en_US.UTF-8" > ~/.zshenv
   echo "export LANG=en_US.UTF-8" >> ~/.zshenv
+  echo "export PATH=\"/usr/local/bin:$PATH\"" >> ~/.zshenv
+  if [ $DO_DEV_APPS -eq 1 ]; then
+    echo "export EDITOR=mcedit" >> ~/.zshenv
+  then
 
   # init .zshrc
   cat ./dotfiles/.zsh-core > ~/.zshrc
+  if [ $DO_DEV_APPS -eq 1 ]; then
+    cat ./dotfiles/.zsh-git >> ~/.zshrc
+    cat ./dotfiles/.zsh-iterm >> ~/.zshrc
+    cat ./dotfiles/.zsh-nvm >> ~/.zshrc
+
+    cp ./dotfiles/.huskyrc ~/.huskyrc
+  then
 }
 doDevApps(){
   # Visual Studio Code
@@ -388,6 +403,10 @@ doDevApps(){
   # iTerm
   APP_URL="https://iterm2.com/downloads/stable/latest"
   installApp "iTerm" $APP_URL
+  curl -SsL "https://iterm2.com/shell_integration/zsh" > "~/.iterm2_shell_integration.zsh"
+  chmod +x "~/.iterm2_shell_integration.zsh"
+  mkdir -p ~/Library/Application\ Support/iTerm2/DynamicProfiles
+  cp ./dotfiles/.iterm-local-profile.json ~/Library/Application\ Support/iTerm2/DynamicProfiles/local.json
 
   # Postman
   APP_URL="https://dl.pstmn.io/download/latest/osx_64"
@@ -407,10 +426,23 @@ doDevApps(){
   APP_URL="https://download.sublimetext.com/sublime_text_build_4126_mac.zip"
   installApp "Sublime Text" $APP_URL
 
+  # NVM & Node.js
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+  nvm install node
+
+  # Jira
   if [ -n "$(mas version 2>/dev/null)" ]
   then
     echo "Install Jira"
     mas install 1475897096
+  fi
+
+  # git name and email
+  if [ -n "${GIT_USER_NAME}" ]; then
+    git config --global user.name "$GIT_USER_NAME"
+  fi
+  if [ -n "${GIT_USER_EMAIL}" ]; then
+    git config --global user.email "$GIT_USER_EMAIL"
   fi
 }
 doApps(){
@@ -429,10 +461,18 @@ doApps(){
 
     echo "Install Slack"
     mas install 803453959
+
+    echo "Install Caffeine"
+    mas install 411246225
+
+    echo "Install 1Blocker"
+    mas install 1365531024
   fi
 }
 
 echo "${txtgrn}Hello! Let's setup your new Mac!${txtrst}"
+
+waitForKey "Be sure to log into the AppStore then press any key to start"
 
 doInitiatory
 

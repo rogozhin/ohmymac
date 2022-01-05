@@ -1,0 +1,6 @@
+HOOK_NAME="$(basename "$0")"
+
+if [[ "$HOOK_NAME" == "pre-commit" ]]; then
+    echo "skip pre-commit"
+    exit 0
+fi

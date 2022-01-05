@@ -6,6 +6,8 @@ Initialize new Mac or new user easily. Set macos settings (Dock appearance, trac
 
 **Note:** It's good idea to check settings and application pack and tune it before installation. Reboot required after installation.
 
+To set git author name and email provide it in `GIT_USER_NAME` and `GIT_USER_EMAIL`.
+
 ### Macos Requirements
 - A 64-bit Intel CPU or Apple Silicon
 - Macos Catalina (10.15) or higher
