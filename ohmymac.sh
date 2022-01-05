@@ -129,6 +129,7 @@ installBrew(){
   brew install mas
 
   if [ $DO_DEV_APPS -eq 1 ]; then
+    brew install wget
     brew install mc
 
     brew install postgres
@@ -184,6 +185,15 @@ doInitiatory(){
   then
   	die "Bash is required to interpret this script"
   fi
+
+  if [ -z "$(wget -V 2>/dev/null)" ] && [ $DO_MACOS_PREFS -eq 0 ]
+  then
+    if [ $DO_DEV_APPS -eq 1 ] || [ $DO_DEV_APPS -eq 1 ]
+    then
+      die "wget is required to download applications"
+    fi
+  fi
+
 
   if [ -z "$(xcode-select -p 2>/dev/null)" ]
   then
