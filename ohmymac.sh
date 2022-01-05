@@ -8,6 +8,7 @@ txtrst=$(tput sgr0)
 DO_MACOS_PREFS=1
 DO_DEV_APPS=1
 DO_APPS=1
+DO_MANUAL_LIST=1
 DO_ALL=1
 
 OS="$(uname)"
@@ -19,6 +20,7 @@ unsetActions(){
   DO_MACOS_PREFS=0
   DO_DEV_APPS=0
   DO_APPS=0
+  DO_MANUAL_LIST=0
   DO_ALL=0
 }
 
@@ -37,6 +39,7 @@ options
   --only-macos-prefs	Setup macos preferences and exit
   --only-dev-apps		Setup developer apps and exit
   --only-apps			Setup non-developer apps and exit
+  --only-manual-actions  Show list to do manually only
 
   --skip-macos-prefs	Do not set macos preferences
   --skip-dev-apps		Do not install developer applications
@@ -78,6 +81,10 @@ getOpts(){
   		--only-apps)
   			unsetActions
   			DO_APPS=1
+  			;;
+      --only-manual-actions)
+  			unsetActions
+  			DO_MANUAL_LIST=1
   			;;
 
   		--skip-macos-prefs)
@@ -170,7 +177,7 @@ installApp(){
 doInitiatory(){
   if [[ "${OS}" != "Darwin" ]]
   then
-  	die "Oh! My not Mac!"
+  	die "Oh! My not a Mac!"
   fi
 
   if [ -z "${BASH_VERSION:-}" ]
@@ -201,9 +208,6 @@ doInitiatory(){
   fi
 }
 doFinish(){
-  # TODO print instructions for manual actions
-  # - safari
-
   waitForKey "press any key to reboot"
   osascript -e 'tell application "System Events" to restart'
 }
@@ -475,14 +479,33 @@ doApps(){
     mas install 1365531024
   fi
 }
+printManualActions(){
+  echo "What to do manually:"
+  echo "- Sarafi settings:"
+  echo "  - Open Safari with all non-private windows from last session"
+  echo "  - Open new window and new tab with empty page"
+  echo "  - Set hompage to empty"
+  echo "  - When a new tab or window opens, make it active"
+  echo "  - Search engine: DuckDuckGo"
+  echo "  - Show full website address"
+  echo "  - Default encoding: UTF-8"
+  echo "  - Show Develop menu"
+  if [ $DO_DEV_APPS -eq 1 ]; then
+    echo "- make iTerm local profile are default"
+    echo "- sync VS Code settings"
+    echo "- import TablePlus profiles"
+  fi
+}
 
 echo "${txtgrn}Hello! Let's setup your new Mac!${txtrst}"
 
-waitForKey "Be sure to log into the AppStore then press any key to start"
+if [ $DO_DEV_APPS -eq 1 ] || [ $DO_APPS -eq 1 ]
+then
+  waitForKey "Be sure to log into the AppStore then press any key to start"
+fi
 
 doInitiatory
 
-# set macos prefs
 if [ $DO_MACOS_PREFS -eq 1 ]; then
   doMacPreferences
 fi
@@ -499,4 +522,10 @@ if [ $DO_APPS -eq 1 ]; then
   doApps
 fi
 
-doFinish
+if [ $DO_MANUAL_LIST -eq 1 ]; then
+  printManualActions
+fi
+
+if [ $DO_MACOS_PREFS -eq 1 ]; then
+  doFinish
+fi
