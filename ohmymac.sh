@@ -3,6 +3,7 @@
 txtred=$(tput setaf 1)    # Red
 txtgrn=$(tput setaf 2)    # Green
 txtylw=$(tput setaf 3)    # Yellow
+txtblu=$(tput setaf 4)    # Blue
 txtrst=$(tput sgr0)
 
 DO_MACOS_PREFS=1
@@ -51,7 +52,21 @@ die(){
   echo "${txtred}$*${txtrst}"
   exit 1
 }
-
+waitForKey(){
+  echo ""
+  echo $1
+  read -rsn1
+}
+title(){
+  echo "${txtblu}==========================${txtrst}"
+  echo "${txtblu}>> $* <<${txtrst}"
+}
+subtitle(){
+  echo "${txtblu}$*${txtrst}"
+}
+printAction(){
+  echo "- $*"
+}
 
 # shift and
 # if [ $# -eq 0 -o "${1:0:1}" = "-" ]; then
@@ -114,24 +129,25 @@ getOpts(){
 
 getOpts $*
 
-waitForKey(){
-  echo ""
-  echo $1
-  read -rsn1
-}
-
 installBrew(){
+  title "Brew"
+
   if [ -z "$(brew --version 2>/dev/null)" ]
   then
+    printAction "Install brew"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
 
+  printAction "Install mas"
   brew install mas
 
   if [ $DO_DEV_APPS -eq 1 ]; then
+    printAction "Install wget"
     brew install wget
+    printAction "Install mc"
     brew install mc
 
+    printAction "Install postgres"
     brew install postgres
     mkdir -p ~/Library/LaunchAgents
     ln -sfv /usr/local/opt/postgresql/*.plist ~/Library/LaunchAgents
@@ -147,12 +163,11 @@ installApp(){
   rm -rf ./tmp
   mkdir -p ./tmp
 
-  echo "Download ${APP_NAME}"
+  printAction "Install ${APP_NAME}"
   wget --directory-prefix="./tmp/" --content-disposition ${APP_URL}
   FILE_NAME=$(ls ./tmp)
   FILE_EXT=${FILE_NAME##*.}
 
-  echo "Insatall ${APP_NAME}"
   if [ "${FILE_EXT}" == "dmg" ]; then
     VOLUME=$(hdiutil attach -nobrowse "./tmp/${FILE_NAME}" |
       awk 'END {$1=$2=""; gsub(/^ +| +$/,""); print $0}'; exit ${PIPESTATUS[0]})
@@ -222,59 +237,50 @@ doFinish(){
   osascript -e 'tell application "System Events" to restart'
 }
 doMacPreferences(){
-  echo "So, fix some macos preferences"
+  title "Macos preferences"
 
-
-  echo "====="
-  echo "Macos"
-  echo "====="
-
-  echo "Require password immediately after sleep or screen saver begins"
+  subtitle "Macos"
+  printAction "Require password immediately after sleep or screen saver begins"
   osascript -e 'tell application "System Events" to set require password to wake of security preferences to true'
 
+  subtitle "Trackpad"
 
-  echo "========"
-  echo "Trackpad"
-  echo "========"
-
-  echo "Tap to click: Tap with one finger"
+  printAction "Tap to click: Tap with one finger"
   defaults write com.apple.AppleMultitouchTrackpad Clicking -int 1
   defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -int 1
   defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
   defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
-  echo "Click: Light"
+  printAction "Click: Light"
   defaults write com.apple.AppleMultitouchTrackpad FirstClickThreshold -int 0
   defaults write com.apple.AppleMultitouchTrackpad SecondClickThreshold -int 1
 
-  echo "Tracking speed: Fast"
+  printAction "Tracking speed: Fast"
   defaults write NSGlobalDomain com.apple.trackpad.scaling -float 2.5
   defaults write -g com.apple.trackpad.scaling -float 2.5
 
-  echo "Drag and select with tree fingers"
+  printAction "Drag and select with tree fingers"
   defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -int 1
   defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -int 1
 
-  echo "========"
-  echo "Keyboard"
-  echo "========"
+  subtitle "Keyboard"
 
-  echo "Press fn key to: Do nothing"
+  printAction "Press fn key to: Do nothing"
   defaults write com.apple.HIToolbox AppleFnUsageType -int 0
 
-  echo "Automatically switch to document's input source"
+  printAction "Automatically switch to document's input source"
   defaults write com.apple.HIToolbox AppleGlobalTextInputProperties -dict TextInputGlobalPropertyPerContextInput 1
 
-  echo "Disable automatic capitalization"
+  printAction "Disable automatic capitalization"
   defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
 
-  echo "Disable automatic period substitution"
+  printAction "Disable automatic period substitution"
   defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
 
-  echo "Disable auto-correct"
+  printAction "Disable auto-correct"
   defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
-  echo "Shortcuts"
+  subtitle "Shortcuts"
   # more information at docs/macos-shortcuts.md
 
   /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
@@ -285,7 +291,7 @@ doMacPreferences(){
     2>/dev/null
   /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
 
-  echo "Shortcuts: Select the previous input source (cmd + space)"
+  printAction "Select the previous input source (cmd + space)"
   /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
     -c "Add :AppleSymbolicHotKeys:60:enabled bool true" \
     -c "Add :AppleSymbolicHotKeys:60:value:parameters array" \
@@ -294,7 +300,7 @@ doMacPreferences(){
     -c "Add :AppleSymbolicHotKeys:60:value:parameters: integer 1048576" \
     -c "Add :AppleSymbolicHotKeys:60:value:type string standard"
 
-  echo "Shortcuts: Select next source in input menu (cmd + opt + space)"
+  printAction "Select next source in input menu (cmd + opt + space)"
   /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
     -c "Add :AppleSymbolicHotKeys:61:enabled bool true" \
     -c "Add :AppleSymbolicHotKeys:61:value:parameters array" \
@@ -303,7 +309,7 @@ doMacPreferences(){
     -c "Add :AppleSymbolicHotKeys:61:value:parameters: integer 1572864" \
     -c "Add :AppleSymbolicHotKeys:61:value:type string standard"
 
-  echo "Shortcuts: Show Spotlight search (ctrl + space)"
+  printAction "Show Spotlight search (ctrl + space)"
   /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
     -c "Add :AppleSymbolicHotKeys:64:enabled bool true" \
     -c "Add :AppleSymbolicHotKeys:64:value:parameters array" \
@@ -312,7 +318,7 @@ doMacPreferences(){
     -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 262144" \
     -c "Add :AppleSymbolicHotKeys:64:value:type string standard"
 
-  echo "Shortcuts: Show Finer search window (ctrl + opt + space) (disable)"
+  printAction "Show Finer search window (ctrl + opt + space) (disable)"
   /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
     -c "Add :AppleSymbolicHotKeys:65:enabled bool false" \
     -c "Add :AppleSymbolicHotKeys:65:value:parameters array" \
@@ -323,64 +329,56 @@ doMacPreferences(){
 
   /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
 
-  echo "======"
-  echo "Finder"
-  echo "======"
+  subtitle "Finder"
 
-  echo "Set home folder as the default location for new Finder windows"
+  printAction "Set home folder as the default location for new Finder windows"
   defaults write com.apple.finder NewWindowTarget -string "PfHm"
   defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/"
 
-  echo "Do not show icons for hard drives, servers, and removable media on the desktop"
+  printAction "Do not show icons for hard drives, servers, and removable media on the desktop"
   defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool false
   defaults write com.apple.finder ShowHardDrivesOnDesktop -bool false
   defaults write com.apple.finder ShowMountedServersOnDesktop -bool false
   defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool false
 
-  echo "Show all filename extensions"
+  printAction "Show all filename extensions"
   defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
-  echo "Show status bar"
+  printAction "Show status bar"
   defaults write com.apple.finder ShowStatusBar -bool true
 
-  echo "Disable the warning when changing a file extension"
+  printAction "Disable the warning when changing a file extension"
   defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 
+  subtitle "Dock"
 
-  echo "===="
-  echo "Dock"
-  echo "===="
-
-  echo "Do not autohide"
+  printAction "Do not autohide"
   defaults write com.apple.dock autohide -bool false
 
-  echo "Set the icon size of Dock items"
+  printAction "Set the icon size of Dock items"
   defaults write com.apple.dock tilesize -int 31
   defaults write com.apple.dock largesize -int 48
 
-  echo "Set the icon magnification"
+  printAction "Set the icon magnification"
   defaults write com.apple.dock magnification -int 1
 
-  echo "Don't automatically rearrange Spaces based on most recent use"
+  printAction "Don't automatically rearrange Spaces based on most recent use"
   defaults write com.apple.dock mru-spaces -int 0
 
-  echo "Show indicator lights for open applications in the Dock"
+  printAction "Show indicator lights for open applications in the Dock"
   defaults write com.apple.dock show-process-indicators -bool true
 
-  echo "Don't show recent applications in Dock"
+  printAction "Don't show recent applications in Dock"
   defaults write com.apple.dock show-recents -bool false
 
-  echo "Don't show Dashboard as a Space"
+  printAction "Don't show Dashboard as a Space"
   defaults write com.apple.dock dashboard-in-overlay -bool true
-
-  installBrew
 }
 doZshInit(){
-  echo "==="
-  echo "zsh"
-  echo "==="
+  title "zsh"
 
   # init .zshenv
+  printAction "Create .zshenv"
   echo "export LC_ALL=en_US.UTF-8" > ~/.zshenv
   echo "export LANG=en_US.UTF-8" >> ~/.zshenv
   echo "export PATH=\"/usr/local/bin:$PATH\"" >> ~/.zshenv
@@ -389,6 +387,7 @@ doZshInit(){
   then
 
   # init .zshrc
+  printAction "Create .zshrc"
   cat ./dotfiles/.zsh-core > ~/.zshrc
   if [ $DO_DEV_APPS -eq 1 ]; then
     cat ./dotfiles/.zsh-git >> ~/.zshrc
@@ -399,6 +398,8 @@ doZshInit(){
   then
 }
 doDevApps(){
+  title "Developer applications"
+
   # Visual Studio Code
   APP_URL="https://code.visualstudio.com/sha/download?build=stable&os=darwin"
   if [ "${CHIP}" == "arm" ]; then
@@ -443,13 +444,15 @@ doDevApps(){
   cp ./dotfiles/Sublime\ Text/*.* ~/Library/Application\ Support/Sublime\ Text\ 3/Packages/User
 
   # NVM & Node.js
+  printAction "Install nvm"
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+  printAction "Install node"
   nvm install node
 
   # Jira
   if [ -n "$(mas version 2>/dev/null)" ]
   then
-    echo "Install Jira"
+    printAction "Install Jira"
     mas install 1475897096
   fi
 
@@ -462,6 +465,8 @@ doDevApps(){
   fi
 }
 doApps(){
+  title "Applications"
+
   # AirServer
   APP_URL="https://www.airserver.com/download/mac/latest"
   installApp "AirServer" $APP_URL
@@ -476,21 +481,21 @@ doApps(){
 
   if [ -n "$(mas version 2>/dev/null)" ]
   then
-    echo "Install Telegram"
+    printAction "Install Telegram"
     mas install 747648890
 
-    echo "Install Slack"
+    printAction "Install Slack"
     mas install 803453959
 
-    echo "Install Caffeine"
+    printAction "Install Caffeine"
     mas install 411246225
 
-    echo "Install 1Blocker"
+    printAction "Install 1Blocker"
     mas install 1365531024
   fi
 }
 printManualActions(){
-  echo "What to do manually:"
+  title "What to do manually:"
   echo "- Sarafi settings:"
   echo "  - Open Safari with all non-private windows from last session"
   echo "  - Open new window and new tab with empty page"
@@ -518,6 +523,7 @@ doInitiatory
 
 if [ $DO_MACOS_PREFS -eq 1 ]; then
   doMacPreferences
+  installBrew
 fi
 
 if [ $DO_ALL -eq 1 ]; then
