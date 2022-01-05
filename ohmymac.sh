@@ -456,6 +456,10 @@ doApps(){
   APP_URL="https://zoom.us/client/latest/Zoom.pkg"
   installApp "Zoom" $APP_URL
 
+  # Chrome
+  APP_URL="https://dl.google.com/chrome/mac/universal/stable/GGRO/googlechrome.dmg"
+  installApp "Chrome" $APP_URL
+
   if [ -n "$(mas version 2>/dev/null)" ]
   then
     echo "Install Telegram"
