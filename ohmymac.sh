@@ -420,8 +420,8 @@ doDevApps(){
   # iTerm
   APP_URL="https://iterm2.com/downloads/stable/latest"
   installApp "iTerm" $APP_URL
-  curl -SsL "https://iterm2.com/shell_integration/zsh" > "~/.iterm2_shell_integration.zsh"
-  chmod +x "~/.iterm2_shell_integration.zsh"
+  curl -SsL "https://iterm2.com/shell_integration/zsh" > ~/.iterm2_shell_integration.zsh
+  chmod +x ~/.iterm2_shell_integration.zsh
   mkdir -p ~/Library/Application\ Support/iTerm2/DynamicProfiles
   cp ./dotfiles/.iterm-local-profile.json ~/Library/Application\ Support/iTerm2/DynamicProfiles/local.json
 
