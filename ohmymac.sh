@@ -491,9 +491,6 @@ doApps(){
     printAction "Install Slack"
     mas install 803453959
 
-    printAction "Install Caffeine"
-    mas install 411246225
-
     printAction "Install 1Blocker"
     mas install 1365531024
   fi
