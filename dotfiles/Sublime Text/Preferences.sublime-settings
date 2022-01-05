@@ -1,0 +1,42 @@
+{
+	"color_scheme": "Packages/User/Mac Classic (SL).tmTheme",
+	"detect_slow_plugins": false,
+	"fade_fold_buttons": false,
+	"fallback_encoding": "Cyrilic (Windows 1251)",
+	"font_face": "SF Mono",
+	"font_options":
+	[
+		"no_round",
+		"no_bold"
+	],
+	"font_size": 13.0,
+	"ignored_packages":
+	[
+		"ActionScript",
+		"ASP",
+		"Clojure",
+		"D",
+		"Erlang",
+		"Go",
+		"Graphviz",
+		"Groovy",
+		"Haskell",
+		"Java",
+		"LaTeX",
+		"Lisp",
+		"Lua",
+		"Markdown",
+		"Matlab",
+		"OCaml",
+		"Pascal",
+		"R",
+		"Rails",
+		"Scala",
+		"TCL",
+		"Textile",
+		"Vintage"
+	],
+	"line_padding_top": 1,
+	"open_files_in_new_window": false,
+	"theme": "Default.sublime-theme"
+}

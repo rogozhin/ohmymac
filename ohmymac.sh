@@ -425,6 +425,8 @@ doDevApps(){
   # Sublime Text
   APP_URL="https://download.sublimetext.com/sublime_text_build_4126_mac.zip"
   installApp "Sublime Text" $APP_URL
+  mkdir -p ~/Library/Application\ Support/Sublime\ Text\ 3/Packages/User
+  cp ./dotfiles/Sublime\ Text/*.* ~/Library/Application\ Support/Sublime\ Text\ 3/Packages/User
 
   # NVM & Node.js
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
