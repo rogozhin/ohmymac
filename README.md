@@ -13,6 +13,10 @@ To set git author name and email provide it in `GIT_USER_NAME` and `GIT_USER_EMA
 - Macos Catalina (10.15) or higher
 - Command Line Tools for Xcode (xcode-select --install) or Xcode 3
 
+### Limitations
+- Some apps will be installed not in last version (Camunda Modeler, Pritunl, Sublime Text, nvm);
+- There is no way to update Safari preferences from terminal on last Macos versions.
+
 ### Using Git
 
 Clone repository and execute `ohmymac.sh`
@@ -31,7 +35,33 @@ Macos preferences:
 - Finder: set home folder as the default location for new Finder windows, do not show volume icons on desktop, show all filename extensions, disable the warning when changing a file extension
 - Dock: do not autohide, set size and magnification of icons, don’t automatically rearrange Spaces, don’t show recent applications in Dock.
 
-Coming soon:
-- brew
-- dev applications
-- applications
+zsh:
+- Turn on autocomplete;
+- Set prompt format;
+- Add git commands aliases;
+- iTerm integration and variables;
+- nvm switch to right node version.
+
+Developer applications:
+- Visual Studio Code;
+- TablePlus;
+- Camunda Modeler;
+- iTerm with zsh integration;
+- Postman;
+- Pritunl;
+- Sublime Text;
+- nvm & node;
+- Jira application.
+
+Applications:
+- AirServer;
+- Zoom;
+- Telegram;
+- Slack;
+- Caffeine;
+- 1Blocker.
+
+Brew:
+- Install Brew;
+- mc;
+- postgresql.
