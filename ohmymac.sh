@@ -385,6 +385,7 @@ doZshInit(){
   echo "export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"" >> ~/.zshenv
   if [ $DO_DEV_APPS -eq 1 ]; then
     echo "export EDITOR=mcedit" >> ~/.zshenv
+    echo "export NVM_DIR=\"$HOME/.nvm\""
   fi
 
   # init .zshrc
@@ -447,6 +448,8 @@ doDevApps(){
   # NVM & Node.js
   printAction "Install nvm"
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
   printAction "Install node"
   nvm install node
 
