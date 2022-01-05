@@ -1,5 +1,5 @@
 # nvm
-test -e ${NVM_HOME}/nvm.sh && source ${NVM_HOME}/nvm.sh
+test -e ${NVM_DIR}/nvm.sh && source ${NVM_DIR}/nvm.sh
 load-nvmrc() {
   local node_version="$(nvm version)"
   local nvmrc_path="$(nvm_find_nvmrc)"
