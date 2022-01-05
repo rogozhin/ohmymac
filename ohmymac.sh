@@ -136,6 +136,7 @@ installBrew(){
   then
     printAction "Install brew"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
   fi
 
   printAction "Install mas"
@@ -381,7 +382,7 @@ doZshInit(){
   printAction "Create .zshenv"
   echo "export LC_ALL=en_US.UTF-8" > ~/.zshenv
   echo "export LANG=en_US.UTF-8" >> ~/.zshenv
-  echo "export PATH=\"/usr/local/bin:$PATH\"" >> ~/.zshenv
+  echo "export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"" >> ~/.zshenv
   if [ $DO_DEV_APPS -eq 1 ]; then
     echo "export EDITOR=mcedit" >> ~/.zshenv
   fi
