@@ -437,13 +437,6 @@ doDevApps(){
   fi
   installApp "Postman" $APP_URL
 
-  # Pritunl
-  APP_URL="https://github.com/pritunl/pritunl-client-electron/releases/download/1.2.3019.52/Pritunl.pkg.zip"
-  if [ "${CHIP}" == "arm" ]; then
-    APP_URL="https://github.com/pritunl/pritunl-client-electron/releases/download/1.2.3019.52/Pritunl.arm64.pkg.zip"
-  fi
-  installApp "Pritunl" $APP_URL
-
   # Sublime Text
   APP_URL="https://download.sublimetext.com/sublime_text_build_4126_mac.zip"
   installApp "Sublime Text" $APP_URL
@@ -519,6 +512,7 @@ printManualActions(){
     echo "- make iTerm local profile are default"
     echo "- sync VS Code settings"
     echo "- import TablePlus profiles"
+    echo "- install Pritunl client"
   fi
 }
 
