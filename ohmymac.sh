@@ -167,6 +167,11 @@ installApp(){
   printAction "Install ${APP_NAME}"
   wget --directory-prefix="./tmp/" --content-disposition ${APP_URL}
   FILE_NAME=$(ls ./tmp)
+  if [[ "${FILE_NAME}" =~ ".dmg?" ]]; then
+    CLEAN_FILE_NAME=${FILE_NAME%%\?*}
+    mv ./tmp/$FILE_NAME ./tmp/$CLEAN_FILE_NAME
+    FILE_NAME=$CLEAN_FILE_NAME
+  fi
   FILE_EXT=${FILE_NAME##*.}
 
   if [ "${FILE_EXT}" == "dmg" ]; then
