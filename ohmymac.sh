@@ -483,6 +483,10 @@ doApps(){
   APP_URL="https://dl.google.com/chrome/mac/universal/stable/GGRO/googlechrome.dmg"
   installApp "Chrome" $APP_URL
 
+  # Caffeine
+  APP_URL="https://github.com/IntelliScape/caffeine/releases/download/1.1.3/Caffeine.dmg"
+  installApp "Caffeine" $APP_URL
+
   if [ -n "$(mas version 2>/dev/null)" ]
   then
     printAction "Install Telegram"
