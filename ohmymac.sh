@@ -147,9 +147,13 @@ installBrew(){
     brew install wget
     printAction "Install mc"
     brew install mc
+    printAction "Install redis"
+    brew install redis
+    brew services start redis
 
     printAction "Install postgres"
     brew install postgres
+    brew services start postgres
     mkdir -p ~/Library/LaunchAgents
     ln -sfv /usr/local/opt/postgresql/*.plist ~/Library/LaunchAgents
     launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
