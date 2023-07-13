@@ -1,7 +1,6 @@
 # git
 alias gs='git status'
 alias ga='git add '
-alias gp='git push ' # todo: push new branch
 alias gc='git commit '
 alias gca='git commit -am '
 alias gco='git checkout '
@@ -16,4 +15,11 @@ function gmerge() {
     git pull
     git checkout $CURR_BR
     git merge main
+}
+function gp() {
+    if git name-rev @{u} > /dev/null 2>&1; then
+      git push
+    else
+      git push --set-upstream origin $(get_git_branch)
+    fi
 }
