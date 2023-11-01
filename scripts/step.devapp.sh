@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-APP_TARGET_PATH="/Applications"
-
 DEVAPP_PREFS+=("Wget;Install wget (brew);ON")
 DEVAPP_PREFS+=("MC;Install mc (brew);ON")
 DEVAPP_PREFS+=("Postgres;Install postgres (brew);ON")
@@ -78,11 +76,8 @@ daNode(){
   nvm install node
 }
 daJira(){
-  if [ -n "$(mas version 2>/dev/null)" ]
-  then
-    printAction "Install Jira"
-    mas install 1475897096
-  fi
+  printAction "Install Jira"
+  mas install 1475897096
 }
 
 askDevApps(){

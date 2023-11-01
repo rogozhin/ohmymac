@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+APP_TARGET_PATH="/Applications"
+
 installApp(){
   APP_NAME=$1
   APP_URL=$2
