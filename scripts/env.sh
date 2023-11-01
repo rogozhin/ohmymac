@@ -4,7 +4,10 @@ DO_MACOS_PREFS=1
 DO_DEV_APPS=1
 DO_APPS=1
 DO_MANUAL_LIST=1
+DO_ZSH_INIT=1
 DO_ALL=1
+
+SHOW_DIALOGS=1
 
 OS="$(uname)"
 HAS_SUDO_RIGHTS=1
@@ -16,6 +19,7 @@ unsetActions(){
   DO_DEV_APPS=0
   DO_APPS=0
   DO_MANUAL_LIST=0
+  DO_ZSH_INIT=0
   DO_ALL=0
 }
 
@@ -30,6 +34,10 @@ getOpts(){
   			usage
   			exit 0
   			;;
+
+      --no-dialogs)
+        SHOW_DIALOGS=1
+        ;;
 
   		--only-macos-prefs)
   			unsetActions
@@ -47,6 +55,10 @@ getOpts(){
   			unsetActions
   			DO_MANUAL_LIST=1
   			;;
+      --only-zsh-init)
+  			unsetActions
+  			DO_ZSH_INIT=1
+  			;;
 
   		--skip-macos-prefs)
   			DO_MACOS_PREFS=0
@@ -59,6 +71,9 @@ getOpts(){
   		--skip-apps)
   			DO_APPS=0
         DO_ALL=0
+  			;;
+      --skip-zsh-init)
+  			DO_ZSH_INIT=0
   			;;
 
   		*)

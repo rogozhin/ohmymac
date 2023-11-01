@@ -346,12 +346,12 @@ then
   waitForKey "Be sure to log into the AppStore then press any key to start"
 fi
 
-if [ $DO_MACOS_PREFS -eq 1 ]; then
-  doMacPreferences
+if [ $DO_ZSH_INIT -eq 1 ]; then
+  doZshInit
 fi
 
-if [ $DO_ALL -eq 1 ]; then
-  doZshInit
+if [ $DO_MACOS_PREFS -eq 1 ]; then
+  doMacPreferences
 fi
 
 if [ $DO_DEV_APPS -eq 1 ]; then

@@ -37,6 +37,14 @@ installBrew(){
   fi
 }
 
+installWhiptail(){
+  if [ -z "$(whiptail -v 2>/dev/null)" ]
+  then
+    printAction "Install whiptail"
+    brew install newt
+  fi
+}
+
 installMas(){
   if [ -z "$(mas version 2>/dev/null)" ]
   then
@@ -65,6 +73,7 @@ init(){
 
   # TODO install if need
   installBrew
+  installWhiptail
   installMas
 }
 
