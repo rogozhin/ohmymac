@@ -59,5 +59,16 @@ showCheckboxes(){
   local TEXT=$2
   local CHECKBOXES=("${ARGS[@]:2}")
   local SIZE=(`stty size`)
-  whiptail --nocancel --title "$TITLE" --checklist "$TEXT" ${SIZE[0]} ${SIZE[1]} $(( ${SIZE[0]} - 8 )) "${CHECKBOXES[@]}"
+  whiptail --nocancel --title "$TITLE" --checklist "$TEXT" ${SIZE[0]} ${SIZE[1]} $(( ${SIZE[0]} - 8 )) "${CHECKBOXES[@]}"  3>&1 1>&2 2>&3
+}
+
+isSelectedOption(){
+  local OPTION=$1
+  local ALL_OPTION=$2
+
+  if [ $OPTION -eq 1 ] || [ $ALL_OPTION -eq 1 ]; then
+    echo "ON"
+  else
+    echo "OFF"
+  fi
 }

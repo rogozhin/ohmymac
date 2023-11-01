@@ -36,7 +36,7 @@ getOpts(){
   			;;
 
       --no-dialogs)
-        SHOW_DIALOGS=1
+        SHOW_DIALOGS=0
         ;;
 
   		--only-macos-prefs)

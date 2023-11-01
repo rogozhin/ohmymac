@@ -3,6 +3,7 @@
 source ./scripts/interact.sh
 source ./scripts/env.sh
 source ./scripts/prepare.sh
+source ./scripts/step.start.sh
 
 installBrewDevApps(){
   printAction "Install wget"
@@ -340,6 +341,8 @@ printManualActions(){
 }
 
 echo "${txtgrn}Hello! Let's setup your new Mac!${txtrst}"
+
+askWhatToDo
 
 if [ $DO_DEV_APPS -eq 1 ] || [ $DO_APPS -eq 1 ]
 then
