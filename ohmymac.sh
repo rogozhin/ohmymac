@@ -235,7 +235,7 @@ doInitiatory(){
   # Close any open System Preferences panes, to prevent them from overriding settings
   osascript -e 'tell application "System Preferences" to quit'
 
-  if [ $HAS_SUDO_RIGHTS -eq 1 ] && [ $NEED_SUDO -eq 1 ]
+  if [ $HAS_SUDO_RIGHTS -eq 0 ] && [ $NEED_SUDO -eq 1 ]
   then
   	# Ask password and prevent to ask again
   	sudo -v
@@ -394,7 +394,7 @@ doZshInit(){
   echo "export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"" >> ~/.zshenv
   if [ $DO_DEV_APPS -eq 1 ]; then
     echo "export EDITOR=mcedit" >> ~/.zshenv
-    echo "export NVM_DIR=\"$HOME/.nvm\""
+    echo "export NVM_DIR=\"$HOME/.nvm\"" >> ~/.zshenv
   fi
 
   # init .zshrc
