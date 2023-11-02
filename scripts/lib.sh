@@ -41,3 +41,27 @@ installApp(){
 
   rm -rf ./tmp
 }
+
+askPrefs(){
+  local TITLES=("$1" "$2")
+  local PREF_SET=$3"[@]"
+
+  if [ $SHOW_DIALOGS -ne 1 ]; then
+    RESULT=()
+    for PREF in "${!PREF_SET}"
+    do
+      IFS=";" read -r -a P <<< "${PREF}"
+      RESULT+=("\"${P[1]}\"")
+    done
+    echo "${RESULT[@]}"
+  else
+    PARAMS=()
+    for PREF in "${!PREF_SET}"
+    do
+      IFS=";" read -r -a P <<< "${PREF}"
+      PARAMS+=("${P[1]}" "" "${P[2]}")
+    done
+
+    showCheckboxes "${TITLES[@]}" "${PARAMS[@]}"
+  fi
+}

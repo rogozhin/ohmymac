@@ -177,30 +177,8 @@ mpDoNotShowDashboard(){
   defaults write com.apple.dock dashboard-in-overlay -bool true
 }
 
-askMacPrefs(){
-  if [ $SHOW_DIALOGS -ne 1 ]; then
-    RESULT=()
-    for PREF in "${MAC_PREFS[@]}"
-    do
-      IFS=";" read -r -a P <<< "${PREF}"
-      RESULT+=("\"${P[0]}\"")
-    done
-    echo "${RESULT[@]}"
-  else
-    TITLES=("Ohmymac! MacOS preferences" "Select what to adjust")
-    PARAMS=()
-    for PREF in "${MAC_PREFS[@]}"
-    do
-      IFS=";" read -r -a P <<< "${PREF}"
-      PARAMS+=("${P[0]}" "${P[1]}" "${P[2]}")
-    done
-
-    showCheckboxes "${TITLES[@]}" "${PARAMS[@]}"
-  fi
-}
-
 doMacPreferences(){
-  TODO=$(askMacPrefs)
+  TODO=$(askPrefs "Ohmymac! MacOS preferences" "Select what to adjust" MAC_PREFS)
 
   title "Macos preferences"
 
@@ -210,7 +188,7 @@ doMacPreferences(){
     local CODE=${P[0]}
     local TITLE=${P[1]}
 
-    if [[ " ${TODO[*]} " =~ " \"${CODE}\" " ]]; then
+    if [[ " ${TODO[*]} " =~ " \"${TITLE}\" " ]]; then
       printAction "$TITLE"
       eval "mp$CODE"
     fi

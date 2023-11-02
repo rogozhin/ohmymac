@@ -9,7 +9,7 @@ DEVAPP_PREFS+=("ITerm;iTerm;ON")
 DEVAPP_PREFS+=("SublimeText;Sublime Text;ON")
 DEVAPP_PREFS+=("Node;NVM & Node.js;ON")
 DEVAPP_PREFS+=("Redis;Install redis (brew);OFF")
-DEVAPP_PREFS+=("Camunda;Modeler;OFF")
+DEVAPP_PREFS+=("Camunda;Camunda Modeler;OFF")
 DEVAPP_PREFS+=("Postman;Postman;OFF")
 DEVAPP_PREFS+=("Jira;Jira;OFF")
 
@@ -80,30 +80,8 @@ daJira(){
   mas install 1475897096
 }
 
-askDevApps(){
-  if [ $SHOW_DIALOGS -ne 1 ]; then
-    RESULT=()
-    for PREF in "${DEVAPP_PREFS[@]}"
-    do
-      IFS=";" read -r -a P <<< "${PREF}"
-      RESULT+=("\"${P[0]}\"")
-    done
-    echo "${RESULT[@]}"
-  else
-    TITLES=("Ohmymac! Developer applications and tools" "Select what to setup")
-    PARAMS=()
-    for PREF in "${DEVAPP_PREFS[@]}"
-    do
-      IFS=";" read -r -a P <<< "${PREF}"
-      PARAMS+=("${P[0]}" "${P[1]}" "${P[2]}")
-    done
-
-    showCheckboxes "${TITLES[@]}" "${PARAMS[@]}"
-  fi
-}
-
 installDevApps(){
-  TODO=$(askDevApps)
+  TODO=$(askPrefs "Ohmymac! Developer applications and tools" "Select what to setup" DEVAPP_PREFS)
 
   title "Developer applications and tools"
 
@@ -113,7 +91,7 @@ installDevApps(){
     local CODE=${P[0]}
     local TITLE=${P[1]}
 
-    if [[ " ${TODO[*]} " =~ " \"${CODE}\" " ]]; then
+    if [[ " ${TODO[*]} " =~ " \"${TITLE}\" " ]]; then
       printAction "$TITLE"
       eval "da$CODE"
     fi

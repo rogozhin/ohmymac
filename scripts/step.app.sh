@@ -39,30 +39,8 @@ apNotion(){
   installApp "Notion" $APP_URL
 }
 
-askApps(){
-  if [ $SHOW_DIALOGS -ne 1 ]; then
-    RESULT=()
-    for PREF in "${APP_PREFS[@]}"
-    do
-      IFS=";" read -r -a P <<< "${PREF}"
-      RESULT+=("\"${P[0]}\"")
-    done
-    echo "${RESULT[@]}"
-  else
-    TITLES=("Ohmymac! Applications and tools" "Select what to setup")
-    PARAMS=()
-    for PREF in "${APP_PREFS[@]}"
-    do
-      IFS=";" read -r -a P <<< "${PREF}"
-      PARAMS+=("${P[0]}" "${P[1]}" "${P[2]}")
-    done
-
-    showCheckboxes "${TITLES[@]}" "${PARAMS[@]}"
-  fi
-}
-
 installApps(){
-  TODO=$(askApps)
+  TODO=$(askPrefs "Ohmymac! Applications and tools" "Select what to setup" APP_PREFS)
 
   title "Applications and tools"
 
@@ -72,7 +50,7 @@ installApps(){
     local CODE=${P[0]}
     local TITLE=${P[1]}
 
-    if [[ " ${TODO[*]} " =~ " \"${CODE}\" " ]]; then
+    if [[ " ${TODO[*]} " =~ " \"${TITLE}\" " ]]; then
       printAction "$TITLE"
       eval "ap$CODE"
     fi

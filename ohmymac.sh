@@ -2,7 +2,7 @@
 
 source ./scripts/interact.sh
 source ./scripts/env.sh
-source ./scripts/app.sh
+source ./scripts/lib.sh
 source ./scripts/prepare.sh
 source ./scripts/step.start.sh
 source ./scripts/step.zsh.sh
