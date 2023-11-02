@@ -12,7 +12,7 @@ MAC_PREFS+=("TrackingSpeedFast;Trackpad: Tracking speed: Fast;ON")
 MAC_PREFS+=("DragAndSelect3Fingers;Trackpad: Drag and select with tree fingers;ON")
 
 # Keyboard
-MAC_PREFS+=("PressFN;Keyboard: Press fn key to: Do nothing;ON")
+MAC_PREFS+=("PressFN;Keyboard: Press fn key to: Show Emoji and Symbols;ON")
 MAC_PREFS+=("AutomaticallySwitchInputSource;Keyboard: Automatically switch to document's input source;ON")
 MAC_PREFS+=("DisableCapitalization;Keyboard: Disable automatic capitalization;ON")
 MAC_PREFS+=("DisablePeriod;Keyboard: Disable automatic period substitution;ON")
@@ -77,7 +77,11 @@ mpDragAndSelect3Fingers(){
   defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -int 1
 }
 mpPressFN(){
-  defaults write com.apple.HIToolbox AppleFnUsageType -int 0
+  # 0 - do nothing
+  # 1 - change input source
+  # 2 - show emojii & symbols
+  # 3 - start dictation
+  defaults write com.apple.HIToolbox AppleFnUsageType -int 2
 }
 mpAutomaticallySwitchInputSource(){
   defaults write com.apple.HIToolbox AppleGlobalTextInputProperties -dict TextInputGlobalPropertyPerContextInput 1
