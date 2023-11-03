@@ -45,13 +45,13 @@ initShortcutsSet(){
   if [ $SHORTCUTS_INITED -eq 1 ]; then
     return
   fi
-  /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
+  PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
     -c "Delete :AppleSymbolicHotKeys:60" \
     -c "Delete :AppleSymbolicHotKeys:61" \
     -c "Delete :AppleSymbolicHotKeys:64" \
     -c "Delete :AppleSymbolicHotKeys:65" \
     2>/dev/null
-  /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+  activateSettings -u
   SHORTCUTS_INITED=1
 }
 
@@ -97,7 +97,7 @@ mpDisableAutoCorrect(){
 }
 mpPreviousInputSource(){
   initShortcutsSet
-  /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
+  PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
     -c "Add :AppleSymbolicHotKeys:60:enabled bool true" \
     -c "Add :AppleSymbolicHotKeys:60:value:parameters array" \
     -c "Add :AppleSymbolicHotKeys:60:value:parameters: integer 32" \
@@ -107,7 +107,7 @@ mpPreviousInputSource(){
 }
 mpNextSourceInMenu(){
   initShortcutsSet
-  /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
+  PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
     -c "Add :AppleSymbolicHotKeys:61:enabled bool true" \
     -c "Add :AppleSymbolicHotKeys:61:value:parameters array" \
     -c "Add :AppleSymbolicHotKeys:61:value:parameters: integer 32" \
@@ -117,7 +117,7 @@ mpNextSourceInMenu(){
 }
 mpShowSpotlight(){
   initShortcutsSet
-  /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
+  PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
     -c "Add :AppleSymbolicHotKeys:64:enabled bool true" \
     -c "Add :AppleSymbolicHotKeys:64:value:parameters array" \
     -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 65535" \
@@ -127,7 +127,7 @@ mpShowSpotlight(){
 }
 mpShowFinerSearch(){
   initShortcutsSet
-  /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
+  PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
     -c "Add :AppleSymbolicHotKeys:65:enabled bool false" \
     -c "Add :AppleSymbolicHotKeys:65:value:parameters array" \
     -c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 65535" \
@@ -194,5 +194,5 @@ doMacPreferences(){
     fi
   done
 
-  /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+  activateSettings -u
 }

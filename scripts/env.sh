@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+shopt -s expand_aliases
+PATH=/usr/libexec:$PATH
+
+alias activateSettings=/System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings
+
 DO_MACOS_PREFS=1
 DO_DEV_APPS=1
 DO_APPS=1
