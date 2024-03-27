@@ -8,6 +8,7 @@ DEVAPP_PREFS+=("TablePlus;TablePlus;ON")
 DEVAPP_PREFS+=("ITerm;iTerm;ON")
 DEVAPP_PREFS+=("SublimeText;Sublime Text;ON")
 DEVAPP_PREFS+=("Node;NVM & Node.js;ON")
+DEVAPP_PREFS+=("GH;GitHub CLI;ON")
 DEVAPP_PREFS+=("Redis;Install redis (brew);OFF")
 DEVAPP_PREFS+=("Camunda;Camunda Modeler;OFF")
 DEVAPP_PREFS+=("Postman;Postman;OFF")
@@ -25,8 +26,8 @@ daRedis(){
 }
 daPostgres(){
   printAction "Install postgres"
-  brew install postgres
-  brew services start postgres
+  brew install postgresql
+  brew services start postgresql
   mkdir -p ~/Library/LaunchAgents
   ln -sfv /usr/local/opt/postgresql/*.plist ~/Library/LaunchAgents
   launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
@@ -78,6 +79,10 @@ daNode(){
 daJira(){
   printAction "Install Jira"
   mas install 1475897096
+}
+daGH(){
+  printAction "Install GitHub CLI"
+  brew install gh
 }
 
 installDevApps(){
