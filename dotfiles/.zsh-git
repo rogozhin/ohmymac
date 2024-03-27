@@ -4,17 +4,22 @@ alias ga='git add '
 alias gc='git commit '
 alias gca='git commit -am '
 alias gco='git checkout '
+function get_git_default_branch() {
+    git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'
+}
 function gnew() {
-    git checkout main
+    local DEFAULT_BRANCH=$(get_git_default_branch)
+    git checkout $DEFAULT_BRANCH
     git pull
     git checkout -b $1
 }
 function gmerge() {
+    local DEFAULT_BRANCH=$(get_git_default_branch)
     local CURR_BR=`git rev-parse --abbrev-ref HEAD`
-    git checkout main
+    git checkout $DEFAULT_BRANCH
     git pull
     git checkout $CURR_BR
-    git merge main
+    git merge $DEFAULT_BRANCH
 }
 function gp() {
     if git name-rev @{u} > /dev/null 2>&1; then
