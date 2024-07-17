@@ -16,9 +16,7 @@ function gnew() {
 function gmerge() {
     local DEFAULT_BRANCH=$(get_git_default_branch)
     local CURR_BR=`git rev-parse --abbrev-ref HEAD`
-    git checkout $DEFAULT_BRANCH
-    git pull
-    git checkout $CURR_BR
+    git fetch origin $DEFAULT_BRANCH
     git merge $DEFAULT_BRANCH
 }
 function gp() {
